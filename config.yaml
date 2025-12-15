@@ -1,0 +1,260 @@
+# sites_config.yaml
+#sites:
+  # 第 1 个目标：satijalab.org
+  #- name: "satijalab.org"
+    #entry_url: "https://satijalab.org/seurat/articles/"
+    #domain: "https://www.bioconductor.org"
+    # 规则配置
+    #rules:
+      # 1. 如何在入口页找到所有教程的链接？
+      # (示例：查找所有在表格中的链接)
+      #link_selector: "a[href*='articles/']"
+      
+      # 2. 在具体教程页中，正文在哪里？
+      # (需要你去 F12 确认，假设是 div class="main-content")
+      #content_selector: "div.contents"
+      
+      #remove_selectors:
+       # - ".navbar"       # 绝大多数网站的导航栏都叫这个
+       # - ".breadcrumbs"  # 或者是面包屑
+
+#sites:
+  # 第 2 个目标：r4ds.hadley.nz
+  #- name: "R4DS_2e"
+    #entry_url: "https://r4ds.hadley.nz/"
+    #domain: "https://r4ds.hadley.nz"
+    #rules:
+      # 精准抓取左侧侧边栏里的所有链接
+      #link_selector: "nav#quarto-sidebar a"
+      
+      # 精准定位中间的正文区域
+      #content_selector: "main.content" 
+      # 注：虽然 r4ds.hadley.nz 通常用 main#quarto-document-content
+      # 但有时候 main.content 也是通用的。如果不放心，可以用逗号：
+      # content_selector: "main#quarto-document-content, main.content"
+
+      #remove_selectors:
+        #- "script"
+        #- "style"
+        # 移除右侧可能混入的小目录
+        #- "#quarto-margin-sidebar"
+        # 移除底部的上一页/下一页导航
+        #- ".page-navigation"
+
+
+
+#sites:
+  #- name: "Qiime2_Amplicon_SOP"
+    #entry_url: "https://amplicon-docs.qiime2.org/en/latest/"
+    #domain: "https://amplicon-docs.qiime2.org"
+    #rules:
+      # 🔥 【大招】基于 URL 特征抓取
+      # 含义：抓取所有 href 属性中包含'how to guides/' 的 a 标签
+      #link_selector: "a[href*='how-to-guides/']"
+
+      # 正文选择器
+      #content_selector: "article.bd-article"
+      
+      # 垃圾清理
+      #remove_selectors:
+        #- "aside"
+        #- "script"
+        #- "style"
+        #- "a.headerlink"
+        #- ".prev-next-area"
+        #- "footer"
+
+# sites:
+#   # GATK 教程抓取配置
+#   - name: "gatk_tutorials"
+#     entry_url: "https://gatk.broadinstitute.org/hc/en-us/articles/360036194592-Getting-started-with-GATK4"
+#     domain: "https://gatk.broadinstitute.org"
+    
+#     # 这一行是关键！确保它存在，并且前面有两个空格的缩进
+#     #is_dynamic: true  
+
+#     rules:
+#       # rules 前面也必须是两个空格的缩进
+#       link_selector: "a.sidenav-item"
+#       content_selector: "div.article-body"
+#       remove_selectors:
+#         - ".article-footer"
+#         - ".article-comments"
+#         - ".article-sidebar"
+#         - ".recent-articles"
+
+# # PhyKIT 教程爬取配置 (从单个页面分割)
+# sites:
+#   - name: "PhyKIT_Tutorials"
+#     # 统一的教程页面 URL
+#     url: "https://jlsteenwyk.com/PhyKIT/tutorials/index.html"
+    
+#     # 输出目录
+#     output:
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/PhyKIT_Tutorials"
+
+# # PhyKIT 教程爬取配置 (从单个页面分割)
+# sites:
+#   - name: "PhyKIT_Tutorials"
+#     # 统一的教程页面 URL
+#     url: "https://jlsteenwyk.com/PhyKIT/usage/index.html"
+    
+#     # 输出目录
+#     output:
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/PhyKIT_Tutorials"
+
+# # GSEAPy 文档爬取配置 (多页面导航结构)
+# sites:
+#   - name: "GSEAPy_Documentation"
+#     # 我们从根目录的 index.html 开始，以确保能抓取到所有链接
+#     url: "https://gseapy.readthedocs.io/en/latest/index.html"
+    
+#     # 输出目录
+#     output:
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/GSEAPy_Documentation"
+
+#     # 解析器规则
+#     parser:
+#       # 1. 在页面上，用于定位所有文档页面链接的 CSS 选择器
+#       # 这个选择器精确地指向左侧导航栏中的所有内部链接
+#       page_links_selector: "nav.wy-nav-side div.wy-menu-vertical ul a.reference.internal"
+      
+#       # 2. 在每个单独的文档页面上，用于提取内容的规则
+#       content_parser:
+#         # 页面主标题的 CSS 选择器
+#         title_selector: "div[role='main'] h1"
+#         # 页面主要内容的 CSS 选择器
+#         content_selector: "div[role='main']"
+
+# Scikit-Learn 文档爬取配置 (多页面导航结构)
+# sites:
+#   - name: "Scikit_Learn_Documentation"
+#     # 起始 URL，脚本将从这个页面开始，并沿着左侧导航栏爬取所有链接
+#     url: "https://scikit-learn.org/stable/modules/linear_model.html"
+    
+#     # 输出目录
+#     output:
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/Scikit_Learn_Documentation"
+
+#     # 解析器规则 (针对 Scikit-learn 网站结构定制)
+#     parser:
+#       # 1. 左侧导航栏中所有内部文档链接的 CSS 选择器
+#       # 这个选择器精确指向了 "User Guide" 下的所有页面链接
+#       page_links_selector: "nav.bd-links a.reference.internal"
+      
+#       # 2. 在每个单独页面上提取内容的规则
+#       content_parser:
+#         # 页面主标题的选择器
+#         title_selector: "main.bd-main h1"
+#         # 页面主要内容区域的选择器
+#         content_selector: "main.bd-main"
+
+# # Bioconductor DESeq2 Vignette 爬取配置
+# sites:
+#   - name: "DESeq2_Vignette"
+#     url: "https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"
+    
+#     output:
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/DESeq2_Vignette"
+    
+#     # 新增的解析器配置
+#     parser:
+#       # 定义用作分割点的 HTML 标签
+#       split_tags: ['h2', 'h3']
+#       # 定义需要排除（不爬取）的章节标题列表
+#       exclude_titles:
+#         - "Contents"
+#         - "Session info" # "Session info" 通常是环境信息，也可以排除
+
+
+# # STHDA 全站教程爬取配置 (动态加载 + 多页面)
+# sites:
+#   - name: "STHDA_Full_Documentation"
+#     # 我们从网站的英文主页开始，这里有最完整的导航菜单
+#     url: "https://www.sthda.com/english/"
+    
+#     output:
+#       # 我们将所有文档保存在一个总的文件夹里
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/STHDA_Full_Documentation"
+    
+#     # 针对 STHDA 网站的完整解析器配置
+#     parser:
+#       # 1. (导航页) 用于查找所有教程页面链接的 CSS 选择器
+#       # 这个选择器精确地指向了导航菜单中所有指向 "/english/wiki/" 的链接
+#       page_links_selector: "ul.sf-menu a[href*='/english/wiki/']"
+      
+#       # 2. (内容页) 主内容容器的 CSS 选择器
+#       main_container_selector: "div.entry-content"
+      
+#       # 3. (内容页) 需要从主内容中移除的“噪音”元素的 CSS 选择器列表
+#       remove_selectors:
+#         - "#ggarg_social_media_sharing"
+#         - "#disqus_thread"
+#         - ".adsbygoogle"
+#         - ".clear"
+#         - "#related_posts"
+#         - ".wp-post-navigation" # 移除“上一篇/下一篇”导航
+      
+#       # 4. (内容页) 需要特殊预处理的代码块选择器
+#       code_block_preprocess_selector: "#rdoc"
+
+#       # 5. (内容页) 需要排除的章节标题 (如果存在)
+#       # 在这种多页面结构中，通常每个页面内容都是我们想要的，但保留这个选项以备不时之需
+#       exclude_titles:
+#         - "Contents"
+#         - "Infos"
+#         - "Related articles"
+
+# config.yaml
+
+# # 顶层必须是 'sites:' 这个键
+# sites:
+#       # 第二个网站配置: Intro to Biostats with R (最终简化版)
+#   - name: "Intro_Biostats_with_R"
+#     url: "https://tuos-bio-data-skills.github.io/intro-stats-book/index.html"
+#     output:
+#       # 【重要】请将这里的路径修改为您自己的目标输出目录
+#       directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/Intro_Biostats_with_R"
+#     parser:
+#       # 精确选择章节链接
+#       page_links_selector: "ul.summary li.chapter a"
+      
+#       # 选择整个主内容区域
+#       main_container_selector: "div[role='main']"
+      
+#       # 此网站内容干净，无需移除任何元素
+#       remove_selectors: []
+
+# "Modern Statistics for Modern Biology" 爬取配置
+# 文件名: config.yaml
+# 文件名: config.yaml
+# 文件名: config.yaml
+sites:
+  - name: "Modern_Statistics_for_Modern_Biology_by_Template"
+    
+    # 【新功能开关】设置为 true 来跳过已存在的文件
+    skip_existing: true
+    
+    url_template: "https://www.huber.embl.de/msmb/{i}-chap.html"
+    template_start: 3
+    template_end: 3
+    
+    output:
+      directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/MSMB_by_Template"
+    
+    parser:
+      main_container_selector: "main#quarto-document-content"
+      remove_selectors:
+        - ".page-navigation"
+        - ".L2T-edit-link"
+
+
+
+
+
+
+
+
+
+
+

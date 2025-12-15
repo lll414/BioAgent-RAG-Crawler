@@ -1,0 +1,17 @@
+# Recommendations for single-cell analysis
+
+Source URL: https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
+Date Scraped: 2025-12-11
+
+---
+
+The DESeq2 developers and collaborating groups have published recommendations for the best use of DESeq2 for single-cell datasets, which have been described first in Van den Berge et al. (2018). Default values for DESeq2 were designed for bulk data and will not be appropriate for single-cell datasets. These settings and additional improvements have also been tested subsequently and published in Zhu, Ibrahim, and Love (2018) and Ahlmann-Eltze and Huber (2020).
+
+**Note:** these recommendations are in particular for running DESeq2 where columns are individual cells in a heterogeneous mixture of cell types. The issues are data sparsity and large-scale compositional differences in the transcriptome between cells of different cell type. *Pseudo-bulk analysis* which aggregates counts from cells and performs comparisons *within cell type* across condition obviates these recommended changes.
+
+* Use `test="LRT"` for significance testing when working with single-cell data, over the Wald test. This has been observed across multiple single-cell benchmarks.
+* Set the following `DESeq` arguments to these values: `useT=TRUE`, `minmu=1e-6`, and `minReplicatesForReplace=Inf`. The default setting of `minmu` was benchmarked on bulk RNA-seq and is not appropriate for single cell data when the expected count is often much less than 1.
+* The default size factors are not optimal for single cell count matrices, instead consider setting `sizeFactors` from `scran::computeSumFactors`.
+* One important concern for single-cell data analysis is the size of the datasets and associated processing time. To address the speed concerns, *DESeq2* provides an interface to [glmGamPoi](https://bioconductor.org/packages/glmGamPoi/), which implements faster dispersion and parameter estimation routines for single-cell data (Ahlmann-Eltze and Huber 2020). To use this feature, set `fitType = "glmGamPoi"`. Alternatively, one can use *glmGamPoi* as a standalone package. This provides the additional option to process data on-disk if the full dataset does not fit in memory, a quasi-likelihood framework for differential testing, and the ability to form pseudobulk samples (more details how to use *glmGamPoi* are in its [README](https://github.com/const-ae/glmGamPoi)).
+
+Optionally, one can consider using the [zinbwave](https://bioconductor.org/packages/zinbwave) package to directly model the zero inflation of the counts, and take account of these in the DESeq2 model. This allows for the DESeq2 inference to apply to the part of the data which is not due to zero inflation. Not all single cell datasets exhibit zero inflation, and instead may just reflect low conditional estimated counts (conditional on cell type or cell state).There is example code for combining *zinbwave* and *DESeq2* package functions in the *zinbwave* vignette. We also have an example of ZINB-WaVE + DESeq2 integration using the [splatter](https://bioconductor.org/packages/splatter) package for simulation at the [zinbwave-deseq2](https://github.com/mikelove/zinbwave-deseq2) GitHub repository.
