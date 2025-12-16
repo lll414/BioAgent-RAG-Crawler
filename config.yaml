@@ -229,24 +229,206 @@
 # 文件名: config.yaml
 # 文件名: config.yaml
 # 文件名: config.yaml
+
+# # config.yaml (专为 OHCA 网站定制 - v2)
+# sites:
+#   - name: "Orchestrating_Hi-C_analysis_OHCA"
+    
+#     skip_existing: true
+    
+#     start_url: "https://bioconductor.org/books/release/OHCA/index.html"
+    
+#     # --- 【核心修改点】 ---
+#     # 使用一个更简单、更可靠的选择器来发现链接
+#     discovery_selector: "#quarto-sidebar .sidebar-item a"
+    
+#     output:
+#       directory: "./output/OHCA_Book"
+    
+#     parser:
+#       main_container_selector: "main#quarto-document-content"
+      
+#       remove_selectors:
+#         - ".page-navigation"
+#         - "h1.unnumbered"
+#         - "#session-info"
+#         - "#session-info ~ *"
+#         - "#references"
+#         - "#references ~ *"
+#         - ".quarto-title-meta"
+#         - ".quarto-title-block-header"
+
+# # config.yaml (专为 OSTA 网站定制)
+# sites:
+#   - name: "Orchestrating_Spatial_Transcriptomics_Analysis_OSTA"
+    
+#     # 设置为 true 来跳过已存在的文件，避免重复工作
+#     skip_existing: true
+    
+#     # 爬虫的入口页面，我们从书籍的欢迎页开始
+#     start_url: "https://bioconductor.org/books/release/OSTA/index.html"
+    
+#     # 用于发现所有章节链接的CSS选择器 (这个选择器和之前一样，依然有效)
+#     discovery_selector: "#quarto-sidebar .sidebar-item a"
+    
+#     output:
+#       # 为这本书创建一个新的输出目录
+#       directory: "./output/OSTA_Book"
+    
+#     parser:
+#       # 主内容容器的选择器 (依然有效)
+#       main_container_selector: "main#quarto-document-content"
+      
+#       # 需要从内容中移除的元素 (同样适用于这本书)
+#       remove_selectors:
+#         - ".page-navigation"      # 移除页面底部的上一页/下一页导航
+#         - ".quarto-title-meta"    # 移除标题下的元信息
+#         - ".quarto-title-block-header" # 移除标题块的头部
+#         - "#references"           # 移除参考文献区域
+#         - "#references ~ *"       # 移除参考文献之后的所有内容
+#         # 对于附录页，我们也可以选择移除 "Session information"
+#         - "#sec-apx-session-info"
+#         - "#sec-apx-session-info ~ *"
+
+
+# # config.yaml (专为 R for Mass Spectrometry 网站定制)
+# sites:
+#   - name: "R_for_Mass_Spectrometry_Book"
+    
+#     # 设置为 true 来跳过已存在的文件，避免重复工作
+#     skip_existing: true
+    
+#     # 爬虫的入口页面
+#     start_url: "https://rformassspectrometry.github.io/book/index.html"
+    
+#     # 用于发现所有章节链接的CSS选择器
+#     discovery_selector: "#TOC .dropdown-content a"
+    
+#     output:
+#       # 为这本书创建一个新的输出目录
+#       directory: "./output/R_for_Mass_Spectrometry_Book"
+    
+#     parser:
+#       # 主内容容器的选择器
+#       main_container_selector: "div.section.level1"
+      
+#       # 需要从内容中移除的元素
+#       remove_selectors:
+#         - ".tooltip"        # 移除 "Copy link" 的小部件
+#         - ".marginnote"     # 移除页边距的注释内容
+#         - ".margin-toggle"  # 移除页边距注释的触发图标
+#         - ".toc-sections"   # 移除内容区域内部的小型目录
+
+# config.yaml (专为 SingleRBook - a bookdown/GitBook site 定制)
+# sites:
+#   - name: "SingleRBook"
+    
+#     # 我们不需要 skip_existing: true 了，因为 V7.0 脚本会自动进行内容比对。
+#     # 如果内容相同，它会自动跳过。
+    
+#     # 爬虫的入口页面，从书籍的索引页开始
+#     start_url: "https://bioconductor.org/books/release/SingleRBook/index.html"
+    
+#     # 用于发现所有章节链接的CSS选择器
+#     discovery_selector: ".book-summary a"
+    
+#     output:
+#       # 为这本书创建一个新的输出目录
+#       directory: "./output/SingleRBook"
+    
+#     parser:
+#       # 主内容容器的选择器 (bookdown/GitBook 结构的特点)
+#       main_container_selector: "section.normal"
+      
+#       # 需要从内容中移除的元素
+#       remove_selectors:
+#         - "#header"           # 移除页面顶部的标题/作者块
+#         - ".anchor-section"   # 移除每个标题旁边的锚点链接图标
+
+# sites:
+#   - name: "csawBook" # 这是我们为新网站添加的配置
+#     start_url: "https://bioconductor.org/books/release/csawBook/index.html"
+#     discovery_selector: ".book-summary a" # 与上一个网站相同
+#     output:
+#       directory: "./output/csawBook" # 创建一个新目录
+#     parser:
+#       main_container_selector: "section.normal" # 与上一个网站相同
+#       remove_selectors:
+#         - "#header"
+#         - ".anchor-section"
+#         - ".rebook-content" # 新增：移除 "Session Info" 的内容块
+
+# sites:
+#   - name: "BiocBookDemo" # 网站的唯一标识名
+#     start_url: "https://bioconductor.org/books/release/BiocBookDemo/index.html" # 爬虫的起始页面
+    
+#     # 链接发现规则：告诉爬虫如何找到网站内所有需要爬取的页面链接
+#     discovery_selector: "#quarto-sidebar a.sidebar-link" # Quarto 网站的侧边栏导航链接
+    
+#     output:
+#       directory: "./output/BiocBookDemo" # 指定抓取内容的输出目录
+      
+#     parser:
+#       # 主内容容器：定义哪个部分是页面的核心内容，此部分之外的都会被丢弃
+#       main_container_selector: "main#quarto-document-content" # Quarto 网站正文区域的ID
+      
+#       # 移除规则：在主内容容器内，移除不需要的元素
+#       remove_selectors:
+#         - "#title-block-header" # 移除每页顶部的标题块
+#         - ".code-copy-button" # 移除代码块右上角的“复制”按钮
+#         - "#quarto-back-to-top" # 移除页面底部的“返回顶部”链接
+#         - "#session-info" # 移除“会话信息”部分 (如果存在)
+#         - "#refs" # 移除页面末尾的“参考文献”部分
+
+# --- 配置说明 ---
+# name: "BiocBookDemo"
+#   - 为这个爬取任务命名。
+# start_url: "https://bioconductor.org/books/release/BiocBookDemo/index.html"
+#   - 爬虫从这本书的主页开始工作。
+# discovery_selector: "#quarto-sidebar a.sidebar-link"
+#   - 爬虫会查找 ID 为 `quarto-sidebar` 的侧边栏，并抓取里面所有 class 为 `sidebar-link` 的 `<a>` 链接，以发现所有章节页面。
+# output.directory: "./output/BiocBookDemo"
+#   - 将处理后的 HTML 文件保存到这个指定的文件夹。
+# parser.main_container_selector: "main#quarto-document-content"
+#   - 在每个页面中，只保留 `<main id="quarto-document-content">` 标签内的内容，这是页面的正文。
+# parser.remove_selectors:
+#   - 在保留的正文内容中，进一步精确地移除一些无用信息，比如标题、按钮和参考文献，让内容更纯净。
+
 sites:
-  - name: "Modern_Statistics_for_Modern_Biology_by_Template"
+  - name: "BiocPy_Tutorial" # 网站的唯一标识名
+    start_url: "https://biocpy.github.io/tutorial/" # 爬虫的起始页面
     
-    # 【新功能开关】设置为 true 来跳过已存在的文件
-    skip_existing: true
-    
-    url_template: "https://www.huber.embl.de/msmb/{i}-chap.html"
-    template_start: 3
-    template_end: 3
+    # 链接发现规则：告诉爬虫如何找到网站内所有需要爬取的页面链接
+    discovery_selector: "#quarto-sidebar a.sidebar-link" # 同样是 Quarto 网站的侧边栏导航链接
     
     output:
-      directory: "/Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/MSMB_by_Template"
-    
+      directory: "./output/BiocPy_Tutorial" # 指定抓取内容的输出目录
+      
     parser:
-      main_container_selector: "main#quarto-document-content"
+      # 主内容容器：定义页面的核心内容区域
+      main_container_selector: "main#quarto-document-content" # Quarto 网站正文区域的ID
+      
+      # 移除规则：在主内容容器内，移除不需要的元素
       remove_selectors:
-        - ".page-navigation"
-        - ".L2T-edit-link"
+        - "#title-block-header" # 移除每页顶部的标题块
+        - ".code-copy-button" # 移除代码块右上角的“复制”按钮
+        - ".toc-actions" # 移除目录下的 "Report an issue" 按钮
+        - ".anchored" # 移除标题旁边的锚点链接图标
+        
+# --- 配置说明 ---
+# name: "BiocPy_Tutorial"
+#   - 为这个爬取任务命名。
+# start_url: "https://biocpy.github.io/tutorial/"
+#   - 爬虫从这个教程的主页开始。
+# discovery_selector: "#quarto-sidebar a.sidebar-link"
+#   - 爬虫会查找 ID 为 `quarto-sidebar` 的侧边栏，并抓取里面所有 class 为 `sidebar-link` 的 `<a>` 链接，从而发现所有章节页面。
+# output.directory: "./output/BiocPy_Tutorial"
+#   - 将处理后的干净 HTML/Markdown 文件保存到这个文件夹。
+# parser.main_container_selector: "main#quarto-document-content"
+#   - 在每个页面中，只保留 `<main id="quarto-document-content">` 标签内的内容，这是页面的正文部分。
+# parser.remove_selectors:
+#   - 在保留的正文内容中，进一步精确地移除一些无用元素，比如页面标题、代码复制按钮、报告问题按钮和锚点图标，以确保提取的内容是纯净的正文。
+
 
 
 

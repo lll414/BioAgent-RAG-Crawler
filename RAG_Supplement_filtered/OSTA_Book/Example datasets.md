@@ -1,0 +1,152 @@
+Source URL: https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html
+Date Scraped: 2025-12-15
+
+---
+
+1. [Background](https://bioconductor.org/books/release/OSTA/pages/bkg-introduction.html)
+2. [6  Example datasets](https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html)
+
+# 6  Example datasets
+
+## 6.1 Introduction
+
+For the examples in this book, we will rely on a set of publicly available datasets that cover different sequencing-based and imaging-based platforms, namely: Visium, Visium HD, Xenium (10x Genomics), and CosMx (Bruker).
+
+This chapter provides an overview of the example datasets used in the code examples in the later chapters.
+
+## 6.2 Distribution
+
+### 6.2.1 OSF repository and OSTA.data
+
+These datasets have been deposited in an Open Storage Framework (OSF) repository [here](https://osf.io/5n4q3), and can be easily queried and downloaded using functions from the *[osfr](https://cran.r-project.org/package=osfr)* CRAN package. For convenience, we have implemented the *[OSTA.data](https://bioconductor.org/packages/3.22/OSTA.data)* Bioconductor package to:
+
+cache invalidation
+
+It can happen that we change, add, or remove data from the OSF repositorying underlying `OSTA.data`. Should you ever run into any issues that might be related to this, we suggest removing affected cache resource(s) as follows, and retrieving these data anew.
+
+Code
+
+```
+library(BiocFileCache)
+bfc <- BiocFileCache()
+# specify dataset identifier
+id <- "Xenium_HumanColon_Oliveira"    
+# query cached files for 'id'
+que <- bfcquery(bfc, id) 
+# clear matching resource
+bfcremove(bfc, que$rid)   
+# retrieve current dataset
+OSTA.data_load(id)
+```
+
+* list and retrieve datasets available through our OSF node
+* cache data as a *.zip* archive using *[BiocFileCache](https://bioconductor.org/packages/3.22/BiocFileCache)*
+* expose logical scalars `pol`ygons and `mol`ecules to skip these data
+
+The following datasets are currently available:
+
+Code
+
+```
+library(OSTA.data)
+OSTA.data_list()
+```
+
+```
+##   [1] "Chromium_HumanBreast_Janesick" "Chromium_HumanColon_Oliveira" 
+##   [3] "CosMx1k_MouseBrain1"           "CosMx1k_MouseBrain2"          
+##   [5] "CosMx6k_HumanBrain"            "VisiumHD_HumanColon_Oliveira" 
+##   [7] "Visium_HumanBreast_Janesick"   "Visium_HumanColon_Oliveira"   
+##   [9] "Xenium_HumanBreast1_Janesick"  "Xenium_HumanColon_Oliveira"
+```
+
+### 6.2.2 STexampleData
+
+In addition, several datasets are available from the *[STexampleData](https://bioconductor.org/packages/3.22/STexampleData)* Bioconductor package as pre-formatted `SpatialExperiment` and `SingleCellExperiment` formats. These data objects are stored on Bioconductor’s *[ExperimentHub](https://bioconductor.org/packages/3.22/ExperimentHub)* resource, and can be loaded in R by querying `ExperimentHub` or using loader functions provided in the `STexampleData` package.
+
+Code
+
+```
+library(STexampleData)
+
+# show help file listing datasets
+# ?STexampleData
+```
+
+### 6.2.3 BiocFileCache
+
+Data files downloaded with the packages above are stored and managed in a temporary directory using *[BiocFileCache](https://bioconductor.org/packages/3.22/BiocFileCache)*. Sometimes, these temporary files may need to be deleted manually, for example if there has been a recent change to files stored in the OSF repository. The code example below shows how to remove the temporary files for one of these datasets. Alternatively, you can also find the temporary directory on your system with `BiocFileCache::BiocFileCache()` and delete files individually.
+
+Code
+
+```
+# locate and delete files in BiocFileCache directory
+id <- "VisiumHD_HumanColon_Oliveira"
+bfc <- BiocFileCache::BiocFileCache()
+qid <- BiocFileCache::bfcquery(bfc, id)$rid
+BiocFileCache::bfcremove(bfc, qid)
+```
+
+## 6.3 Datasets
+
+Below, we briefly summarize the characteristics of several key datasets, and note across which parts of the book these are being used.
+
+### 6.3.1 HumanBreast\_Janesick
+
+In the underlying paper ([Janesick et al. 2023](https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html#ref-Janesick2023-high-res)), the Xenium data (2 replicates) were accompanied by consecutive slices of Chromium and Visium data. Therefore, these replicates are expected to have nearly identical biological findings. By transferring Chromium cell type labels to spatial technologies, such as Visium (with full transcriptome) and Xenium (at single-cell resolution), we can combine analytical insights from different platforms.
+
+* reference: Janesick et al. ([2023](https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html#ref-Janesick2023-high-res))
+* source: [10x Genomics](https://www.10xgenomics.com/products/xenium-in-situ/preview-dataset-human-breast)
+* annotations: [cell type worksheet](https://www.10xgenomics.com/products/xenium-in-situ/preview-dataset-human-breast) (all platforms)
+* **Chromium**
+  + source: [GSM7782698](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7782698)
+  + 18,082 genes x 30,365 cells
+* **Visium**
+  + source: [GSM7782699](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7782699)
+  + 18,085 genes x 4,992 spots
+* **Xenium**
+  + source: [GSM7780153](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7780153), [GSM7780154](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7780154)
+  + replicate 1: 313 RNA targets x 167,780 cells
+  + replicate 2: 313 RNA targets x 118,752 cells
+
+### 6.3.2 HumanColon\_Oliveira
+
+In the underlying paper, there are both normal adjacent tissue (NAT) and colorectal carcinoma (CRC) samples from 5 patients. The Visium HD data (P2 CRC) were accompanied by consecutive slices of Chromium, Visium, and Xenium data. Therefore, we can jointly analyze these modalities.
+
+* reference: de Oliveira et al. ([2025](https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html#ref-deOliveira2025-high-def))
+* source: [10x Genomics](https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc)
+* annotations: [repository](https://github.com/10XGenomics/HumanColonCancer_VisiumHD/tree/main/MetaData) (Chromium & VisiumHD deconvolution)
+* **Chromium**
+  + 18,082 genes x 279,609 cells
+    - P2, P3, P5 NAT
+    - P1-5 CRC
+* P2 CRC:
+  + **Visium**
+    - 18,085 genes x 4,269 spots
+  + **VisiumHD**
+    - 18,085 genes x
+      * 8,731,400 bins (2µm)
+      * 545,913 bins (8µm)
+      * 137,051 bins (16µm)
+  + **Xenium**
+    - 422 RNA targets x 340,837 cells
+
+### 6.3.3 CosMx1k\_MouseBrain1/2
+
+There are two sections from the CosMx mouse brain sample, namely “coronal hemisphere” (sample 1) and “coronal hippocampus and cortex” (sample 2).
+
+* source: [Bruker](https://nanostring.com/products/cosmx-spatial-molecular-imager/ffpe-dataset/cosmx-smi-mouse-brain-ffpe-dataset/)
+* 950 RNA targets x
+  + 48,556 cells (coronal hemisphere)
+  + 38,996 cells (coronal hippocampus and cortex)
+
+### 6.3.4 CosMx6k\_HumanBrain
+
+The CosMx human prefrontal cortex sample has a larger gene panel of ~6,000 RNA targets.
+
+* source: [Bruker](https://nanostring.com/products/cosmx-spatial-molecular-imager/ffpe-dataset/human-frontal-cortex-ffpe-dataset/)
+* 6,278 RNA targets x 188,686 cells
+
+## 6.4 Appendix
+
+Back to top

@@ -1,0 +1,28 @@
+Source URL: https://biocpy.github.io/tutorial/chapters/experiments/
+Date Scraped: 2025-12-15
+
+---
+
+BiocPy provides (currently) three classes to represented experimental data. This includes
+
+* `SummarizedExperiment` ([GitHub](https://github.com/BiocPy/SummarizedExperiment), [Docs](https://biocpy.github.io/SummarizedExperiment/), [BioC](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html)): Container class to represent genomic experiments, following Bioconductor’s [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html).
+* `SingleCellExperiment` ([GitHub](https://github.com/BiocPy/SingleCellExperiment), [Docs](https://biocpy.github.io/SingleCellExperiment/), [BioC](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html)): Container class to represent single-cell experiments; follows Bioconductor’s [SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html).
+* `MultiAssayExperiment` ([GitHub](https://github.com/BiocPy/MultiAssayExperiment), [Docs](https://biocpy.github.io/MultiAssayExperiment/), [BioC](https://bioconductor.org/packages/release/bioc/html/MultiAssayExperiment.html)): Container class to represent multiple experiments and assays performed over a set of samples. follows Bioconductor’s [MAE R/Bioc Package](https://bioconductor.org/packages/release/bioc/html/MultiAssayExperiment.html).
+
+The [biocpy](https://github.com/BiocPy/BiocPy) package serves as a convenient wrapper that installs all the core packages within the ecosystem.
+
+```
+pip install biocpy
+```
+
+Alternatively, you can install specific packages as required. For example:
+
+```
+pip install summarizedexperiment # <package-name>
+```
+
+To update packages, use the following command:
+
+```
+pip install -U summarizedexperiment # or <package-name>
+```

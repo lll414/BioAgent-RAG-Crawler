@@ -1,0 +1,41 @@
+Source URL: https://biocpy.github.io/tutorial/chapters/language_agnostic.html
+Date Scraped: 2025-12-15
+
+---
+
+In this section, we will illustrate a workflow that utilizes language-agnostic representations for storing genomic data, facilitating seamless access to datasets and analysis results across multiple programming frameworks such as R and Python. The [ArtifactDB](https://github.com/artifactdb) framework provides this functionality.
+
+To begin, we will download the “zilionis lung” dataset from the [scRNAseq](https://bioconductor.org/packages/release/data/experiment/html/scRNAseq.html) package. Subsequently, we will store this dataset in a language-agnostic format using the [alabaster suite](https://github.com/ArtifactDB/alabaster.base) of R packages.
+
+```
+library(scRNAseq)
+library(alabaster)
+
+sce <- ZilionisLungData()
+saveObject(sce, path=paste(getwd(), "zilinoislung", sep="/"))
+```
+
+Note
+
+Additionally, you can save this dataset as an RDS object for access in Python. Refer to [interop with R](https://biocpy.github.io/tutorial/chapters/interop.html) section for more details.
+
+We can now load this dataset in Python using the [dolomite suite](https://github.com/ArtifactDB/dolomite-base) of Python packages. Both dolomite and alabaster are integral parts of the ArtifactDB ecosystem designed to read artifacts stored in language-agnostic formats.
+
+```
+from dolomite_base import read_object
+
+data = read_object("./zilinoislung")
+print(data)
+```
+
+You can now convert this to `AnnData` representations for downstream analysis.
+
+```
+adata = data.to_anndata()
+```
+
+Important
+
+Leveraging the generic **read** functions `readObject` (R) and `read_object` (Python), along with the **save** functions `saveObject` (R) and `save_object` (Python), you can seamlessly store most Bioconductor objects in language-agnostic formats.
+
+* Check out [ArtifactDB](https://github.com/artifactdb) framework for more information.

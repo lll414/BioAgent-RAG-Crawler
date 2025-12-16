@@ -1,0 +1,29 @@
+Source URL: https://bioconductor.org/books/release/csawBook/contributors.html
+Date Scraped: 2025-12-15
+
+---
+
+# Chapter 12 Contributors
+
+
+
+### *Aaron Lun*
+
+Me.
+
+### *Gordon Smyth*
+
+My PhD supervisor.
+
+### Other entities
+
+Aliaksei Holik (Walter and Eliza Hall Institute for Medical Research), who provided the raw materials for the H3K27me3 workflow.
+
+## Grant information
+
+National Health and Medical Research Council (Program Grant 1054618 to G.K.S., Fellowship to G.K.S.);
+Victorian State Government Operational Infrastructure Support; Australian Government NHMRC IRIIS.
+
+## Acknowledgements
+
+The authors would like to thank Prof. Stephen Nutt for his valuable insights on B-cell biology.

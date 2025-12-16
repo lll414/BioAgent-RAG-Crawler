@@ -1,0 +1,170 @@
+Source URL: https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html
+Date Scraped: 2025-12-15
+
+---
+
+1. [Sequencing-based platforms](https://bioconductor.org/books/release/OSTA/pages/seq-introduction.html)
+2. [9  Reads to counts](https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html)
+
+# 9  Reads to counts
+
+## 9.1 Background
+
+Sequencing-based Spatial Transcriptomics (sST) platforms employ next-generation sequencing (NGS) to quantify gene expression across spatial locations on a tissue based on spatial barcodes. The spatial location information is encoded during platform manufacture and sample preparation, and associated with transcripts measured during sequencing. This association is present within the structure of the reads sequenced by an NGS platform.
+
+To perform spatial data analysis, several preprocessing steps are needed to convert raw sequencing data into a useful format, often a count matrix, from which we can analyse gene expression across a tissue of interest. These steps differ from platform to platform but all start from a series of ‘reads’ and end with one of the several spatial data formats used with downstream analysis tools like `Squidpy`, `Seurat`, or Bioconductor workflows using `SpatialExperiment` objects.
+
+## 9.2 Introduction to Reads and Sequencing
+
+When we talk about ‘reads’ in transcriptomics, we’re referring to a sequence of nucleotides (bases) that represent a cDNA fragment, which is reverse transcribed from an RNA molecule. The abundance of these transcripts is a corollary to gene expression, which is what we’re trying to measure in transcriptomics analysis. The benefit to spatial transcriptomics data is the ability to associate reads with locations on the tissue where the RNA molecule, and thus the expression of the corresponding gene, originated. The process of generating reads generally involves the following steps:
+
+1. RNA Extraction
+2. Reverse Transcription
+3. cDNA Fragmentation
+4. Adapter Ligation
+5. PCR Amplification
+
+Because of the PCR Amplification step, and the imperfect nature of RNA Extraction, we can only consider read abundance as a relative measure of gene expression, and it should never be treated as an absolute measure. Additionally, this means that steps need to be taken to normalize the data before analyses such as Differential Expression (DE) analysis can be performed. However, well before the point in analysis where we might perform normalization, reads first need to be pre-processed through a number of methods to construct a count matrix or equivalent data structure, which we would normally use in downstream analysis. The rest of this chapter aims to address these pre-processing steps and provide some examples to help when pre-processing in your own analysis.
+
+### 9.2.1 Read Structure
+
+For the majority of sequencing based spatial technologies, reads are recorded as ‘paired end’ where both ends of the DNA fragment are sequenced into different files, often `.fastq` files. One of these files (often read 1) contains barcode sequences, and depending on whether reads have been trimmed first, may also include linking or other structural sequences. The other file will contain the sequence containing the transcript (or probe) that we intend to align to a reference genome or transcriptome (or probe-set) to determine the gene expressed.
+
+An example read structure from the [BGI STOmics Stereo-seq user manual](https://enfile.stomics.tech/STOmics%20Stereo-seq%20Transcriptomics%20Set%20User%20Manual_C%20August%202023.pdf.pdf) is given below:
+
+![](../images/seq-reads-to-counts_Stereo-seq_read_structure.jpg)
+
+Figure 9.1: Read structure of Stereo-seq Spatial Transcriptomics library construction. Demonstrating paired-end next gen sequencing (NGS) reads.
+
+Here, we see that Read 1 constitutes the first 50bp from the left end of the sequence and Read 2 the last 100bp starting from the right end of the sequence.
+
+Read 1 contains 25bp of the Coordinate ID (CID), a fixed linking sequence 15bp long, and a 10bp Molecule ID (MID).
+
+Read 2 only contains a fragment of the transcript captured (100bp long).
+
+Another example, this time from the 10X Visium CytAssist kit is provided to demonstrate the structure of a probe based library:
+
+![](../images/seq-reads-to-counts_VisiumCytAssist_read_structure.jpg)
+
+Example read structure from 10X Genomics User Guide | Visium CytAssist Spatial Gene Expression Reagent Kits. In this example, the 16bp spatial barcode and the 12bp UMI are located at the start of Read 1, and Read 2 contains the 50bp Ligated Probe Insert.
+
+Each read in a `.fastq` file also has an associated read header and quality score. An example (also from the BGI STOmics Stereo-seq user manuals) is provided for demonstration:
+
+![](../images/seq-reads-to-counts_Stereo-seq_manual_FASTQ_format.png)
+
+Figure 9.2: FASTQ file format details from the BGI STOmics Stereo-seq user manuals. Here, both Read 1 and Read 2 are shown while for real data these would be in two separate files as described above.
+
+The first line of both reads is the read ‘header’ or ‘name’ and is used to uniquely identify each read and potentially details such as the sequencer lane the read is from. The header is also where tools can insert their own additional metadata for the read as ‘comments’. The second line contains the bases of the sequenced transcript as described earlier. Line three is a spacer line and often just contains a single ‘+’ character although occasionally the read identifier and comments from the header are duplicated here. Line four contains the read quality scores for each base of the sequence. The quality scale differs depending on the sequencer version and whether Q4 or Q40 files are used. Q-scores are a logarithmic measure of confidence in base calling given by a p-value. The exact calculation of this p-value and the threshold at which reads are rejected differs platform to platform, so it’s always worth checking the tools you’re using if these statistics are important to your analysis.
+
+## 9.3 From Reads to Counts
+
+The process of converting a series of reads into a count matrix generally follows a consistent overall structure. This can be broken down into a series of steps which all workflows in some form perform:
+
+1. Barcode Deconvolution
+2. Read Alignment
+3. Filtering and QC
+4. Counting and Binning
+
+After these steps, further QC and processing is performed at the count matrix level including:
+
+1. Spot level Filtering and Quality Control (QC)
+2. Normalization
+3. Feature Selection
+
+Note
+
+See the chapters on Quality Control (#seq-quality-control), and Processing (#seq-processing).
+
+### 9.3.1 Barcode Deconvolution
+
+Although reads contain most of the information, we need to construct a count matrix, a ‘mapping’ file to interpret the Coordinate IDs (CIDs) in Read 1 is often needed to resolve the spatial localisation of the recorded gene expression. For some sST platforms,the mapping from barcodes to locations is fixed, such as for 10X Visium, and the mapping file will be fixed for the protocol version while for others the mapping is random and the vendor will have provided a file for this mapping specific to your chips. When the mapping file is fixed, most tools (e.g. Space Ranger) will be able to fetch the mapping file automatically given the chip ID, however when the mapping file is chip specific, this will need to be handled by the user.
+
+The process of mapping reads based on their CIDs to spatial locations is known as barcode deconvolution and is often the first step in sST data preprocessing. As this is also the step that differs most platform to platform and across protocol/data versions, it is also the most important step to understand at a lower level than the rest of the steps.
+
+### 9.3.2 Read Alignment
+
+The sequences that correspond to transcripts are not particularly useful as is; for useful data analysis to be performed, the transcripts need to be mapped back to the genes that “expressed” them This is done by aligning the sequences to a reference genome annotated with the locations of genes.
+
+Alignment is performed by a software aligner such as `STAR` ([Dobin et al. 2013](https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html#ref-Dobin2013-STAR)), or *[Rsubread](https://bioconductor.org/packages/3.22/Rsubread)* ([Liao, Smyth, and Shi 2019](https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html#ref-Liao2019-Rsubread)). [SpaceRanger](https://www.10xgenomics.com/support/software/space-ranger/latest) and [SAW](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html) are vendor pipelines for Visium and Stereo-seq, respectively, and both make use of `STAR` for alignment.
+
+### 9.3.3 Filtering and QC
+
+At the read level, filtering and QC is performed based on information from all of the previous preprocessing steps: reads with low Quality Scores are filtered out, reads with barcodes that didn’t map to known CIDs or MID/UMIs are filtered out, and finally reads that didn’t align to the reference genome, aligned to multiple regions ambiguously, or aligned to intronic regions are all likely to be filtered out depending slightly on the tool/pipeline and parameters thereof.
+
+Once filtering has been performed, Quality Control metrics can be used to fine-tune additional filtering performed on the data either at the read level, or later at the spot level. Some commonly used metrics and plots are as follow:
+
+* Quality Score distribution/density plots: Can help identify any clear patterning in Q-scores that might indicate contaminants or rna degradation.
+* Read mapping statistics: Useful to check that the aligner is configured correctly as well as the quality of the mapping
+* UMI Duplication distribution: Can help to check that PCR amplification was successful and to empirically evaluate sequencing depth.
+
+(An example of the last two plots from stPipe’s HTML report is given in Fig 3)
+
+![](../images/seq-reads-to-counts_stPipe_read_mapping_plot.png)
+
+(a) Read Mapping Plot
+
+![](../images/seq-reads-to-counts_stPipe_umi_duplication_plot.png)
+
+(b) UMI Duplication Distribution
+
+Figure 9.3: Two QC plots from stPipe’s automatically generated HTML report. The first shows Read Mapping Statistics; The second shows the UMI Duplication distribution
+
+### 9.3.4 Counting and Binning
+
+Once all read level steps have been performed and reads have been associated with spatial locations using the deconvolved CIDs, a matrix of genes by spots (location) can be constructed and each read counted based on CID and the gene annotated at the aligned region.
+
+Most platforms at this stage will ‘bin’ the spots to a lower resolution by combining the counts of an n by n square of spots (often 20, 50, 100, or 200 depending on the base spot size) to reduce sparsity and make the data easier to analyse.
+
+Binning can also be done to cellular resolution if the platform in question has spots smaller than the cell types composing the tissue. For cell binning, the high resolution microscopy images and the DAPI stain (if available) can be used to find cell boundaries and spots within those boundaries are combined into a single object like with square binning.
+
+## 9.4 Preprocessing Tools
+
+### 9.4.1 Vendor Tools
+
+* [Space Ranger](https://www.10xgenomics.com/support/software/space-ranger/latest)
+  :   Space Ranger is a popular bioinformatics pipelines developed by 10X Genomics for their Visium platform. Newer versions of Space Ranger also support Visium HD data processing. The Space Ranger can be divided into two main parts: (1) read processing and (2) image processing. The former involves the following steps:
+
+1. Read trimming
+2. Assay alignment
+3. Barcode correction
+4. Profile filtering
+5. UMI counting
+6. Spot binning
+
+* [SAW](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html) ([Gong et al. 2024](https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html#ref-Gong2024-SAW))
+  :   The Stereo-seq Analysis Workflow (SAW) is a preprocessing pipeline designed by BGI to handle the complexities of spatial transcriptomics data from the Stereo-seq technology. SAW requires a reference genome, CID mapping file(s) (often hdf5 format), FASTQ files, and optionally tissue images for cell segmentation. The specific workflow of SAW includes the following steps:
+
+1. Data reformatting
+2. CID Mapping error counting
+3. Genome Alignment
+4. Clustering and Feature Selection
+5. MID Correction
+6. Spatial Visualization and Tissue Region Extraction
+
+* [Curio Seeker Bioinformatic Pipeline](https://curiobioscience.com/seeker/)
+  :   The Curio Seeker bioinformatics pipeline developed by Curio Bioscience processes sST data from the Curio Seeker spatial mapping kit, it is written in Nextflow, and both Singularity and Docker can execute it. The pipeline requires paired end FASTQ files, bead barcode locations, and a reference genome. The Curio Seeker pipeline involves barcode extraction and mapping, read alignment with `STAR`, and UMI deduplication with `UMItools`. Curio Seeker follows a similar workflow pattern to the other tools mentioned, but with some notable differences due to the bead distribution used for spatial barcoding:
+
+1. Bead Barcode extraction and read trimming
+2. Read Filtering
+3. Barcode matching
+4. Read alignment
+5. Feature extraction
+6. UMI deduplication
+
+### 9.4.2 stPipe: A Platform Agnostic R-based Solution
+
+*[stPipe](https://bioconductor.org/packages/3.22/stPipe)* ([Xu et al. 2025](https://bioconductor.org/books/release/OSTA/pages/seq-reads-to-counts.html#ref-Xu2025-stPipe)) is a sST data preprocessing tool designed to be platform agnostic, and to unify the preprocessing of sST data from a wide variety of spatial technology solutions such as 10x Visium, BGI Stereo-seq, and Curio Slide-seq.
+
+The stPipe workflow (Fig 4) begins with the function `Run_ST`, which streamlines multiple steps into one cohesive process, including FASTQ or BAM file reformatting, read alignment, barcode demultiplexing, and gene counting.
+
+After these preprocessing steps, stPipe allows the user to export the data as one of several types of downstream object, which are compatible with all major spatial data analysis tools. Additionally, the user can choose to perform interactive data analysis and sampling using the stPipe package through the `RunInteractive` function.
+
+![](../images/seq-reads-to-counts_stPipe_workflow_preprint.jpg)
+
+Figure 9.4: Workflow diagram for stPipe including function calls and data objects with downstream analysis options highlighted.
+
+A vignette demonstrating the workflow of stPipe for some example Visium data is provided below: <https://github.com/mritchielab/stPipe/blob/main/vignettes/stPipe-vignette.Rmd>
+
+## 9.5 Appendix
+
+Back to top

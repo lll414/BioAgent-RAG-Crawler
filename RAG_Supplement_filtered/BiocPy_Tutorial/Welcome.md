@@ -1,0 +1,49 @@
+Source URL: https://biocpy.github.io/tutorial/
+Date Scraped: 2025-12-15
+
+---
+
+# Welcome
+
+![](./assets/full.png "BiocPy: Facilitate Bioconductor Workflows in Python")
+
+[Bioconductor](https://www.bioconductor.org/) is an open-source software project that provides tools for the analysis and comprehension of genomic data. One of the main advantages of Bioconductor is the availability of standard data representations and large number of analysis tools tailored for genomic experiments. These tools allow researchers to seamlessly store, manipulate, and analyze data across multiple tools and workflows in R.
+
+Inspired by Bioconductor, [BiocPy](https://github.com/BiocPy) aims to facilitate bioinformatics workflows in Python. To achieve this goal, we developed several core data structures that align closely to the Bioconductor implementations. These structures include [BiocFrame](https://github.com/BiocPy/BiocFrame), providing a Bioconductor-like data frame class, and [GenomicRanges](https://github.com/BiocPy/GenomicRanges) which aids in representing genomic regions and facilitating analysis. They serve as essential and foundational data structures, acting as the building blocks for extensive and complex representations. For instance, container classes like [SummarizedExperiment](https://github.com/BiocPy/SummarizedExperiment), [SingleCellExperiment](https://github.com/BiocPy/SingleCellExperiment) and [MultiAssayExperiment](https://github.com/BiocPy/MultiAssayExperiment) represent single or multi-omic experimental data and metadata.
+
+Moreover, BiocPy introduces a diverse range of data type classes designed to support the representation of atomic entities, including *float*, *string*, *int* lists, and named lists. These generics and utilities are provided through [BiocUtils](https://github.com/BiocPy/BiocUtils) package and the delayed and file-backed array operations in the [DelayedArray](https://github.com/BiocPy/DelayedArray) and their derivatives ([HDF5Array](https://github.com/BiocPy/HDF5array), [TileDbArray](https://github.com/BiocPy/tiledbarray)). To our knowledge, BiocPy is the first Python framework to provide seamless, well-integrated data structures and representations for genomic data analysis.
+
+For convenient access to experimental data stored in RDS files, the [rds2py](https://github.com/BiocPy/rds2py) package provides bindings to the [rds2cpp](https://github.com/ltla/rds2cpp) library. This enables direct reading of RDS files in Python, eliminating the requirement for additional data conversion tools or intermediate formats. The package’s functionality streamlines the transition between Python and R, facilitating seamless analysis.
+
+Although not covered by this tutorial, BiocPy provides bindings to [libscran](https://github.com/LTLA/libscran) and various other single-cell analysis methods incorporated into the [scranpy](https://github.com/BiocPy/scranpy) package to support analysis of multi-modal single-cell datasets. It also features integration with the [singleR](https://github.com/BiocPy/singler) algorithm to annotate cell types by matching cells to known references based on their expression profiles.
+
+All packages within the BiocPy ecosystem are published to [Python’s Package Index (PyPI)](https://pypi.org/).
+
+For complete list of all packages, please visit the [GitHub:BiocPy](https://github.com/BiocPy) repository.
+
+* `BiocFrame` ([GitHub](https://github.com/BiocPy/BiocFrame), [Docs](https://biocpy.github.io/BiocFrame/)): Bioconductor-like dataframes in Python.
+* `IRanges` ([GitHub](https://github.com/BiocPy/IRanges), [Docs](https://biocpy.github.io/IRanges/)): Python implementation of the **IRanges** package to support interval arithmetic.
+* `GenomicRanges` ([GitHub](https://github.com/BiocPy/GenomicRanges), [Docs](https://biocpy.github.io/GenomicRanges/), [BioC](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html)): Container class to represent genomic locations and support genomic analysis.
+* `SummarizedExperiment` ([GitHub](https://github.com/BiocPy/SummarizedExperiment), [Docs](https://biocpy.github.io/SummarizedExperiment/)): Container class to represent genomic experiments, following Bioconductor’s [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html).
+* `SingleCellExperiment` ([GitHub](https://github.com/BiocPy/SingleCellExperiment), [Docs](https://biocpy.github.io/SingleCellExperiment/)): Container class to represent single-cell experiments; follows Bioconductor’s [SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html).
+* `MultiAssayExperiment` ([GitHub](https://github.com/BiocPy/MultiAssayExperiment), [Docs](https://biocpy.github.io/MultiAssayExperiment/)): Container class to represent multiple experiments and assays performed over a set of samples. follows Bioconductor’s [MAE R/Bioc Package](https://bioconductor.org/packages/release/bioc/html/MultiAssayExperiment.html).
+
+* `scranpy`([GitHub](https://github.com/BiocPy/scranpy), [Docs](https://biocpy.github.io/scranpy/)): Python bindings to the single-cell analysis methods from **libscran** and related C++ libraries.
+* `singler`([GitHub](https://github.com/BiocPy/singler), [Docs](https://biocpy.github.io/singler/)): Python bindings to the **singleR** algorithm to annotate cell types from known references.
+
+* `rds2py` ([GitHub](https://github.com/BiocPy/rds2py), [Docs](https://biocpy.github.io/rds2py/)): Read RDS files directly in Python. Supports Bioconductor’s `SummarizedExperiment` and `SingleCellExperiment` in addition to matrices, data frames and vectors.
+
+* `BiocUtils` ([GitHub](https://github.com/BiocPy/BiocUtils), [Docs](https://biocpy.github.io/BiocUtils/)): Common utilities for use across packages, mostly to mimic convenient aspects of base R.
+* `mopsy` ([GitHub](https://github.com/BiocPy/mopsy), [Docs](https://biocpy.github.io/mopsy/)): Helper functions to perform row or column operations over numpy and scipy matrices. Provides an interface similar to base R matrix methods/MatrixStats methods.
+* `pyBiocFileCache` ([GitHub](https://github.com/BiocPy/pyBiocFileCache), [Docs](https://pypi.org/project/pyBiocFileCache/)): File system based cache for resources & metadata.
+
+---
+
+Many online resources offer detailed information on Bioconductor data structures, namely:
+
+* <https://compgenomr.github.io/book/>
+* <https://www.nature.com/articles/nmeth.3252>
+* <https://www.nature.com/articles/s41592-019-0654-x>
+* <https://github.com/waldronlab/EPIC-BiocIntro>
+
+This is a reproducible Quarto book with ***reusable snippets***. To learn more about Quarto books visit <https://quarto.org/docs/books>. Check out [Reproduce me](https://biocpy.github.io/tutorial/chapters/sessioninfo.html) for more information.

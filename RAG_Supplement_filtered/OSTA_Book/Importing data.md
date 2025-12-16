@@ -1,0 +1,133 @@
+Source URL: https://bioconductor.org/books/release/OSTA/pages/bkg-importing-data.html
+Date Scraped: 2025-12-15
+
+---
+
+1. [Background](https://bioconductor.org/books/release/OSTA/pages/bkg-introduction.html)
+2. [5  Importing data](https://bioconductor.org/books/release/OSTA/pages/bkg-importing-data.html)
+
+# 5  Importing data
+
+## 5.1 Introduction
+
+This chapter provides details on how to import data into R as Bioconductor-based data classes ([Chapter 3](https://bioconductor.org/books/release/OSTA/pages/bkg-infrastructure.html)). First, we provide an overview of the raw data structure, followed by an explanation of how to read the raw data into R.
+
+## 5.2 Flat file structure
+
+At present, the file structure and formats of data from spatial transcriptomics platforms varies between commercial providers. Nevertheless, all data are similar in their essence, e.g.: sequencing-based data include spatial locations of array spots (or other spatial locations) and a count matrix; imaging-based data include transcript locations (from spot-calling), polygon boundaries (from segmentation), and a count matrix (from allocating transcripts to cells), etc.
+
+Here, we provide a summary for several commercially available data types.
+
+### 5.2.1 Visium (10x Genomics)
+
+Running [Space Ranger](https://www.10xgenomics.com/support/software/space-ranger/latest) (the data processing software provided by 10x Genomics) on Visium data creates a set of standardized output files. These comprise raw measurement data (similar to scRNA-seq but including, e.g., spot-level coordinates, potential images), as well as results from a standard analysis pipeline that includes standard quality control, dimension reduction (PCA, t-SNE, and UMAP), graph-based clustering, etc.
+
+The resulting outputs are described by 10x Genomics [here](https://www.10xgenomics.com/support/software/space-ranger/latest/analysis/outputs/output-overview); briefly:
+
+Code
+
+```
+Visium
+  └── outs
+    ├── spatial
+      ├── tissue_positions[_list].csv      # spot locations
+      ├── scalefactors_json.json           # scaling factor 
+      └── tissue_[hi/low]res_image.png     # same-section H&E
+    └── filtered_feature_bc_matrix         # in-tissue matrix files
+    └── raw_feature_bc_matrix              # unfiltered matrix files
+         ├── barcodes.tsv # spot barcodes (i.e., sequences)
+         ├── features.tsv # gene metadata (e.g., Ensembl IDs)
+         └── matrix.mtx   # (gene x spot) count matrix
+```
+
+### 5.2.2 Visium HD (10x Genomics)
+
+Running [Space Ranger](https://www.10xgenomics.com/support/software/space-ranger/latest) on Visium HD data generates outputs similar to the above, but by default includes outputs binned at a resolution of 2, 8, and 16 µm. Thus, outputs have a hierarchical structure where each `binned_outputs/` subdirectory contains files analogous to the `outs/` directory for Visium; e.g.:
+
+Code
+
+```
+VisiumHD
+  └── binned_outputs
+    └─── square_002um
+      ├── filtered_feature_bc_matrix.h5
+      └── filtered_feature_bc_matrix
+        ├── barcodes.tsv.gz
+        ├── features.tsv.gz
+        └── matrix.mtx.gz
+      ├── raw_feature_bc_matrix.h5
+      └── raw_feature_bc_matrix
+        └── ...
+      └── spatial
+        ├── tissue_positions.parquet
+        ├── scalefactors_json.json           
+        └── tissue_[hi/low]res_image.png
+    └── square_*
+  └── segmented_outputs
+    ├── cell_segmentations.geojson
+    ├── nucleus_segmentations.geojson
+    ├── filtered_feature_cell_matrix.h5
+    ├── raw_feature_cell_matrix.h5
+    └── spatial
+      ├── scalefactors_json.json           
+      └── tissue_[hi/low]res_image.png
+```
+
+### 5.2.3 Xenium (10x Genomics)
+
+Running [Xenium Ranger](https://www.10xgenomics.com/support/software/xenium-ranger/latest) reduces raw data generated from Xenium runs to an output bundle with standardized file structure and contents. Notably, 10x Genomics provides a variety of output file formats (for example, both *.csv* and *.parquet* for gene / cell metadata), facilitating interoperability with a variety of frameworks.
+
+All outputs are described by 10x Genomics in detail [here](https://www.10xgenomics.com/support/software/xenium-onboard-analysis/latest/analysis/xoa-output-understanding-outputs); briefly:
+
+Code
+
+```
+Xenium
+  └── outs 
+    ├── cells.parquet          # cell metadata (e.g., area)
+    ├── cell_feature_matrix.h5 # compressed format of the below 
+    └── cell_feature_matrix    # segmentation-derived matrix files
+      ├── barcodes.tsv # cell barcodes (i.e., sequences)
+      ├── features.tsv # gene metadata (e.g., target type)
+      └── matrix.mtx   # (gene x cell) count matrix
+    ├── transcripts.parquet        # molecule locations
+    ├── cell_boundaries.parquet    # membrane segmentation
+    ├── nucleus_boundaries.parquet # nuclear segmentation 
+    └── experiment.xenium # experiment-wide metadata (in .json format)
+```
+
+### 5.2.4 CosMx (Bruker)
+
+Through [custom module scripts](https://github.com/Nanostring-Biostats/CosMxDACustomModules), the [AtoMx Spatial Informatics Portal (SIP)](https://nanostring.com/products/atomx-spatial-informatics-platform/atomx-sip-overview/) allows exporting different types of objects and, importantly, “flat” (human-readable) file formats. Unlike raw data (e.g. images prior to spot-calling), these represent processed outputs (e.g. spatial locations of segmentation boundary vertices and molecules, segmentation-derived count matrix, etc.).
+
+A detailed description of these files is given [here](https://nanostring-biostats.github.io/CosMx-Analysis-Scratch-Space/posts/flat-file-exports/flat-files-compare.html); briefly:
+
+Code
+
+```
+CosMx
+  ├── exprMat_file.csv       # (gene x cell) counts
+  ├── fov_positions_file.csv # FOV corner positions
+  ├── metadata_file.csv      # cell-level metadata
+  ├── polygons.csv           # segmentation boundaries
+  └── tx_file.csv            # molecule locations
+```
+
+## 5.3 Reading into R
+
+### 5.3.1 Bioconductor packages
+
+Reader functions from several Bioconductor packages can be used to import data from raw files into a `SpatialExperiment` object (or derivatives thereof; see [Chapter 3](https://bioconductor.org/books/release/OSTA/pages/bkg-infrastructure.html)) in R, including:
+
+* *[VisiumIO](https://bioconductor.org/packages/3.22/VisiumIO)* provides readers for spatial data from the 10x Genomics Space Ranger pipeline, i.e. Visium and Visium HD. This includes support for *.mtx*, *.tar.gz*, and *.h5* file formats, and for reading in multiple samples at once. Data are read into a `SpatialExperiment` object.
+* *[XeniumIO](https://bioconductor.org/packages/3.22/XeniumIO)* provides functions to import 10x Genomics Xenium data into R. Notably, there is support for multiple file formats (e.g. *.h5* and *.mtx* for count data, *.parquet* and *.csv* for polygons and molecules, etc.), as well as automated distinction between RNA targets and other barcodes (e.g. negative probes, blank codes, etc.).
+* *[SpatialExperimentIO](https://bioconductor.org/packages/3.22/SpatialExperimentIO)* provides readers for a variety of imaging-based spatial transcriptomics platforms, including CosMx (Bruker), Xenium (10x Genomics), MERSCOPE (Vizgen), and seqFISH (Spatial Genomics). Data may be read into a `SingleCellExperiment` or `SpatialExperiment` object.
+* *[SpatialFeatureExperiment](https://bioconductor.org/packages/3.22/SpatialFeatureExperiment)* provides functions to read CosMx, Xenium, MERSCOPE, and Visium(HD) as `SpatialFeatureExperiment` objects.
+
+### 5.3.2 Examples
+
+Examples showing how to read in raw data into R using functions from the Bioconductor packages listed above are included in the workflow chapters in this book (e.g. [Chapter 14](https://bioconductor.org/books/release/OSTA/pages/seq-workflow-visium-crc.html), [Chapter 16](https://bioconductor.org/books/release/OSTA/pages/seq-workflow-visium-hd-seg.html), [Chapter 24](https://bioconductor.org/books/release/OSTA/pages/img-workflow-xenium.html), and [Chapter 38](https://bioconductor.org/books/release/OSTA/pages/crs-workflow-xenvis.html)). The datasets are described in more detail in [Chapter 6](https://bioconductor.org/books/release/OSTA/pages/bkg-example-datasets.html).
+
+In addition, the *[STexampleData](https://bioconductor.org/packages/3.22/STexampleData)* package provides access to pre-formatted datasets from several platforms in `SpatialExperiment` and `SingleCellExperiment` formats, which are used in several examples in this book.
+
+Back to top

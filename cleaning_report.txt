@@ -1,0 +1,48 @@
+=== 数据清洗诊断报告 (保守版) ===
+扫描目录: /Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output
+
+📄 文件: /Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/Qiime2_Amplicon_SOP/moving-pictures.md
+  [L1246][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/gg-13-8-99-515-806-nb-classifier.qza)'
+  [L143][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/sample-metadata-viz.qzv)'
+  [L245][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/emp-single-end-sequences.zip)'
+  [L314][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/emp-single-end-sequences.qza)'
+  [L394][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux.qza)'
+  [L395][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux-details.qza)'
+  [L448][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux.qzv)'
+  [L603][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux-filtered.qza)'
+  [L604][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux-filter-stats.qza)'
+  [L687][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/rep-seqs-deblur.qza)'
+  [L688][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/table-deblur.qza)'
+  [L689][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/deblur-stats.qza)'
+  [L776][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/demux-filter-stats.qzv)'
+  [L777][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/deblur-stats.qzv)'
+  [L80][净化行内] 将移除链接: '[download](https://moving-pictures-tutorial.readthedocs.io/en/latest/data/moving-pictures/sample-metadata.tsv)'
+--------------------
+📄 文件: /Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/Qiime2_Amplicon_SOP/gut-to-soil.md
+  [L140][净化行内] 将移除链接: '[download](https://gut-to-soil-tutorial.readthedocs.io/en/latest/data/gut-to-soil/sample-metadata.qzv)'
+  [L199][净化行内] 将移除链接: '[download](https://gut-to-soil-tutorial.readthedocs.io/en/latest/data/gut-to-soil/demux.qza)'
+  [L258][净化行内] 将移除链接: '[download](https://gut-to-soil-tutorial.readthedocs.io/en/latest/data/gut-to-soil/demux.qzv)'
+  [L639][净化行内] 将移除链接: '[download](https://gut-to-soil-tutorial.readthedocs.io/en/latest/data/gut-to-soil/suboptimal-16S-rRNA-classifier.qza)'
+  [L78][净化行内] 将移除链接: '[download](https://gut-to-soil-tutorial.readthedocs.io/en/latest/data/gut-to-soil/sample-metadata.tsv)'
+--------------------
+📄 文件: /Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/satijalab.org/get_started.md
+  [L25][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/pbmc3k_tutorial) | [GO](/seurat/articles/multimodal_vignette) | [GO](/seurat/articles/spatial_vignette) |'
+  [L32][删除整行] 可能是导航菜单: '| [GO](spatial_vignette_2.html) |'
+  [L43][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/integration_introduction) | [GO](/seurat/articles/integration_mapping) | [GO](/seurat/articles/integration_rpca) |'
+  [L50][删除整行] 可能是导航菜单: '| [GO](integration_large_datasets.html) | [GO](atacseq_integration_vignette.html) | [GO](/seurat/articles/multimodal_reference_mapping) |'
+  [L66][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/weighted_nearest_neighbor_analysis) | [GO](/seurat/articles/mixscape_vignette) | [GO](/seurat/articles/sctransform_vignette) |'
+  [L73][删除整行] 可能是导航菜单: '| [GO](sctransform_v2_vignette.html) |'
+  [L84][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/visualization_vignette) | [GO](/seurat/articles/cell_cycle_vignette) | [GO](/seurat/articles/de_vignette) |'
+  [L91][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/hashing_vignette) | [GO](conversion_vignette.html) | [GO](future_vignette.html) |'
+--------------------
+📄 文件: /Users/lll/Desktop/实习/黑森智动/RAG_Supplement/output/satijalab.org/get_started_v5_new.md
+  [L103][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/cell_cycle_vignette) | [GO](/seurat/articles/de_vignette) | [GO](/seurat/articles/hashing_vignette) |'
+  [L25][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/pbmc3k_tutorial) | [GO](/seurat/articles/multimodal_vignette) | [GO](/seurat/articles/visualization_vignette) |'
+  [L32][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/sctransform_vignette) | [GO](/seurat/articles/essential_commands) |'
+  [L43][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/integration_introduction) | [GO](/seurat/articles/seurat5_integration) | [GO](/seurat/articles/integration_mapping) |'
+  [L54][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/seurat5_integration_bridge) | [GO](/seurat/articles/weighted_nearest_neighbor_analysis) | [GO](atacseq_integration_vignette.html) |'
+  [L61][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/multimodal_reference_mapping) | [GO](/seurat/articles/mixscape_vignette) |'
+  [L74][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/seurat5_sketch_analysis) | [GO](/seurat/articles/parsebio_sketch_integration) | [GO](/seurat/articles/covid_sctmapping) |'
+  [L81][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/seurat5_bpcells_interaction_vignette) |'
+  [L92][删除整行] 可能是导航菜单: '| [GO](/seurat/articles/seurat5_spatial_vignette_2) | [GO](/seurat/articles/spatial_vignette) | [GO](/seurat/articles/visiumhd_analysis_vignette) |'
+--------------------

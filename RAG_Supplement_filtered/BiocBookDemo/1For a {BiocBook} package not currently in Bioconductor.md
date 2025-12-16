@@ -1,0 +1,56 @@
+Source URL: https://bioconductor.org/books/release/BiocBookDemo/pages/Chapter-3.html
+Date Scraped: 2025-12-15
+
+---
+
+## 3.1 For a {`BiocBook`} package not currently in Bioconductor
+
+One can build against older Bioconductor releases as follows:
+
+* Commit current changes before switching branches (should be in `devel` branch)
+
+```
+gert::git_commit_all("Commit current changes")
+```
+
+* Create a new branch named `RELEASE_X_Y` and checkout
+
+```
+gert::git_branch_create("RELEASE_3_17")
+```
+
+* Push local `RELEASE_X_Y` to Github
+
+```
+gert::git_push()
+```
+
+## 3.2 For a {`BiocBook`} package accepted in Bioconductor > 6 months ago
+
+Once your package is accepted in Bioconductor, your repository will have access to a new **remote** named `upstream`, pointing to `git@git.bioconductor.org`. When Bioconductor releases a new version, your package will change version on the `upstream` remote, in a dedicated release branch `RELEASE_X_Y`. All details are available [here](https://contributions.bioconductor.org/git-version-control.html).
+
+To generate a Docker image and a version of the `BiocBook` website built on new Bioconductor releases, you can:
+
+* Add the `Bioconductor` remote to your local repository (this might already be set up)
+
+```
+gert::git_remote_add(name = 'upstream', url = 'git@git.bioconductor.org:packages/<YOUR-REPOSITORY>.git')
+```
+
+* Create a new local `RELEASE_X_Y` branch
+
+```
+gert::git_branch_create("RELEASE_3_15")
+```
+
+* Pull the `upstream` `RELEASE_X_Y` commits
+
+```
+gert::git_pull("RELEASE_3_15", remote = "upstream")
+```
+
+* Push the local `RELEASE_X_Y` branch to `origin` remote (your own Github repository)
+
+```
+gert::git_push("RELEASE_3_15", remote = "origin")
+```

@@ -1,0 +1,63 @@
+Source URL: https://biocpy.github.io/tutorial/chapters/philosophy.html
+Date Scraped: 2025-12-15
+
+---
+
+As we developed BiocPy packages, we established standards and contribution guidelines to ensure code quality and consistency across all our packages.
+
+Our objective is to provide a consistent user experience in Python for each Bioconductor class. In most cases, this is achieved by directly re-implementing the class and its associated methods in Python. Occasionally, there are cases where the Bioconductor implementation has historical idiosyncrasies that lead to unintuitive user experience e.g., the storage of `rowData` in a `RangedSummarizedExperiment`, `MultiAssayExperiment` harmonization; developers should use their own discretion to decide whether replicating this behavior in Python is necessary.
+
+We highly recommend adhering to [Google’s Python style guide](https://google.github.io/styleguide/pyguide.html) for consistency in naming conventions. In summary, classes should use `PascalCase` and follow Bioconductor’s class names. Methods should use `snake_case` and take the form of `<verb>[_<details>]`, such as `get_start()`, `set_names()` and so forth. Method arguments should also follow the `snake_case` format.
+
+Usability has been another crucial objective, to facilitate an easy transition for users between R and Python classes. For instance, when computing flanking regions in R:
+
+```
+flank(gr, width=2, start=FALSE, both=TRUE)
+```
+
+In the [GenomicRanges](https://github.com/BiocPy/GenomicRanges) Python packages, we maintain consistency by expecting the same method name. The only difference lies in the shift from a functional to an object-oriented programming paradigm:
+
+```
+gr.flank(width=2, start=False, both=True)
+```
+
+The existence of mutable types in Python introduces the potential for inadvertently modifying complex objects. Generally, users lack knowledge about whether an object (or their reference to it) serves as a component of another object, such as a `BiocFrame` set as `column_data` in a `SummarizedExperiment`. Any user modifications to an instance of a mutable type may unexpectedly impact all objects containing that instance.
+
+To address these issues, we recommend adopting a functional programming paradigm in all class methods. By default, methods should refrain from causing side effects that mutate the object. This simplifies reasoning about the effects of methods and mutations in large, complex objects.
+
+The most notable application of this philosophy is in ***setter*** methods. Instead of directly mutating the object, these methods should return a new copy of the object with the desired modification. The *“depth”* of the copy is left to the discretion of the developer. For example, some methods may choose to use a shallow copy for efficiency. The only requirement is to avoid any modification to the contents in `self`. While implementations may offer an `in_place=` option to modify the original object, this should default to `False`.
+
+The return value of a ***getter*** method should remain unaltered to avoid potential mutations in `self`. For getters that return mutable types, developers should document that the return value is read-only. This aims to discourage users from unintentionally modifying `self` by mutating the return value. (Note that functional style setters can still be applied - they are compatible with a read-only philosophy since they do not actually modify the object.) Developers may also choose to return a copy that can be more freely modified, depending on the depth of the copy, users should refer to the relevant method’s documentation.
+
+Direct access to class members (via properties or `@property` decorator) should generally be avoided, as it mutates the object *in-place*. This could lead to unexpected side effects as previously discussed. Nevertheless, developers may provide these methods for compatibility purposes.
+
+As the term suggests, type hints serve as “hints” to enhance the developer experience, and they should not dictate how we write our code.
+
+For this reason, we prefer for using simple types in these hints, typically corresponding to base Python types with minimal nesting. For example, if a function is expected to operate on any arbitrary list, the basic list type hint should suffice.
+
+```
+def find_element(arr: list, query: int)
+    pass
+```
+
+If the function expects a list of strings:
+
+```
+from typing import List
+
+def find_element(arr: List[str], query: str):
+    pass
+```
+
+In cases where the function accepts multiple types as inputs:
+
+```
+from typing import Union
+
+def find_element(arr: List[str], query: Union[int, str, slice]):
+    pass
+```
+
+---
+
+Additionally, we provide recommendations on setting up the package using [PyScaffold](https://pyscaffold.org/), different testing environments, documentation, and publishing workflows. These details can be found in the [developer guide](https://github.com/BiocPy/developer_guide).

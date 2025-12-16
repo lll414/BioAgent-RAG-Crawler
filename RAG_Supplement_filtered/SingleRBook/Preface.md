@@ -1,0 +1,28 @@
+Source URL: https://bioconductor.org/books/release/SingleRBook/
+Date Scraped: 2025-12-15
+
+---
+
+# Preface
+
+[![SingleR Sticker](https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/SingleR/SingleR_sticker_invert.png)](https://bioconductor.org/packages/SingleR)
+
+Imagine a world without a reference genome.
+Whenever we receive new RNA-seq data, we’d need to run it through an assembler to identify the expressed sequences.
+We would then need to inspect each sequence to determine its likely function, e.g., based on sequence motifs.
+This process is analogous to current practice in single-cell data analysis; simply replace reads with cells, assemblies with clusters, and genes with cell types.
+A typical practitioner will hope that their clusters are reasonable proxies for the biological states of interest and that their manual annotation of the clusters is accurate.
+Such an “artisanal” process is difficult to reproduce and scale to larger datasets involving more diverse cell types.
+
+The solution is to perform automated cell type annotation, a.k.a. cell type classification (or occasionally, “label transfer”).
+These methods compare cells in a new dataset against curated reference profiles of known cell types, assigning each new cell to the reference type that its expression profile is most similar to.
+This allows users to skip the mundane annotation of their data and jump directly to the interesting questions - does my cell type change in abundance or expression across treatments? Is there interesting substructure within an existing population?
+In this respect, automated annotation methods are the single-cell field’s equivalent to genome aligners,
+and we anticipate that the former will also become standard procedure for single-cell data analysis.
+
+This book covers the use of *[SingleR](https://bioconductor.org/packages/3.22/SingleR)*, one implementation of an automated annotation method.
+If you want a survey of different annotation methods - this book is not for you.
+If you want to create hand-crafted cluster definitions - this book is not for you.
+(Read the [other one](https://osca.bioconductor.org) instead.)
+If you want to use the pre-Bioconductor version of the package - this book is not for you.
+But if you’re tired of manually annotating your single-cell data and you want to do something better with your life, then read on.
